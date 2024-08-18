@@ -30,12 +30,26 @@ jobs:
       run: ls -l petstore.collection.json
 
     - name: Run POSTMAN collection
-      run: 
-        newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport1.html
-      continue-on-error: true
+      run: newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme
 
-    - name: Output the run details
-      uses: actions/upload-artifact@v3
+    - name: Checkout gh-pages branch
+      run: git checkout -B gh-pages
+
+    - name: Copy Test Results to gh-pages branch
+      run: cp -r testResults/* .
+
+    - name: Commit and push Test Results to gh-pages branch
+      env:
+        GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+      run: |
+        git config --global user.email "styrkink@gmail.com"
+        git config --global user.name "styrkink"
+        git add .
+        git commit -m "Update Test Results"
+        git push -f origin gh-pages
+
+    - name: Setup GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: RunReports
-        path: testResults
+        github_token: ${{ secrets.GH_PAGES_TOKEN }}
+        publish_dir: ./testResults
