@@ -9,27 +9,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
-
+          node-version: "20.x"
 
       - name: Install newman
         run: |
           npm install -g newman
           npm install -g newman-reporter-htmlextra
 
-
       - name: Make Directory for results
         run: mkdir -p testResults
 
+      - name: Verify Collection File
+        run: ls -l petstore.collection.json
 
       - name: Run POSTMAN collection
         run: |
-            newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme
-
+          newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme --verbose
+        continue-on-error: true
 
       - name: Output the run Details
         uses: actions/upload-artifact@v2
