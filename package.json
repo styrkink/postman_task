@@ -1,0 +1,20 @@
+{
+  "name": "mock-rest-api",
+  "version": "1.0.0",
+  "description": "<a href=\"https://drive.google.com/file/d/1LQ1uG7Tt70Jubuk5loS4dMSk-1AJ5jzz/view?usp=sharing\" /> Intro </a>",
+  "scripts": {
+    "tern-on-api": "cp mockApi/db_back_up.yaml mockApi/db_stage.yaml && npx yaml-server --hotReload=off --autoStart=off --port 3000 --database ./mockApi/db_stage.yaml"
+  },
+  "keywords": [
+    "api",
+    "mock",
+    "yaml-server",
+    "rest"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yaml-server": "^1.10.0"
+  },
+  "main": "index.js"
+}
