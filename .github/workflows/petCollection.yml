@@ -30,7 +30,7 @@ jobs:
       run: ls -l petstore.collection.json
 
     - name: Run POSTMAN collection
-      run: newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme
+      run: newman run petstore.collection.json --reporter-htmlextra-export testResults/htmlreport.html
 
     - name: Checkout gh-pages branch
       run: git checkout -B gh-pages
