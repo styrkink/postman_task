@@ -36,7 +36,7 @@ jobs:
 
     - name: Check if report was generated
       run: |
-        if [ ! -f testResults/htmlreport.html ]; then
+        if [ ! -f ./testResults/htmlreport.html ]; then
           echo "Report not generated, exiting...";
           exit 1;
         fi
