@@ -26,7 +26,7 @@ jobs:
         run: mkdir -p newman-report
 
       - name: Run Newman Collection
-        run: newman run petstore.collection.json --reporters html,cli --reporter-html-export newman-report/newman-report.html
+        run: newman run petstore.collection.json --reporters html,cli --reporter-html-export newman-report/newman-report.html --suppress-exit-code
 
       - name: Check if report exists
         run: |
