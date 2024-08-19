@@ -40,7 +40,7 @@ jobs:
 
     - name: Copy Test Results to gh-pages branch
       if: success()
-      run: cp -r testResults/* .
+      run: cp -r ./testResults/* .
 
     - name: Commit and push Test Results to gh-pages branch
       if: success()
