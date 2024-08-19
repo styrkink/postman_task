@@ -32,14 +32,14 @@ jobs:
     - name: Run POSTMAN collection
       run: |
         newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" \
-        --reporter-htmlextra --reporter-htmlextra-export ./testResults/htmlreport.html --suppress-exit-code
+        --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html --suppress-exit-code
       continue-on-error: true
 
     - name: Output Newman Logs
       run: cat ./newman/cli.log
 
     - name: List Test Results Directory
-      run: ls -l ./testResults
+      run: ls -l testResults
 
     - name: Checkout gh-pages branch
       if: success()
@@ -47,7 +47,7 @@ jobs:
 
     - name: Copy Test Results to gh-pages branch
       if: success()
-      run: cp -r ./testResults/* .
+      run: cp -r testResults/* .
 
     - name: Commit and push Test Results to gh-pages branch
       if: success()
@@ -65,4 +65,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GH_PAGES_TOKEN }}
-        publish_dir: ./testResults
+        publish_dir: testResults
