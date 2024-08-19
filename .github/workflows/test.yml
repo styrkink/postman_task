@@ -1,0 +1,28 @@
+name: Run Petstore Collection
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-postman-collection:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Run Petstore Collection
+      run: newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2"
