@@ -45,32 +45,3 @@ jobs:
           publish_branch: gh-pages
           publish_dir: testResults
 
-#       - name: Check if report exists
-#         run: |
-#           if [ -f newman-report/newman-report.html ]; then
-#             echo "Report exists"
-#           else
-#             echo "Report does not exist"
-#             exit 1
-#           fi
-
-#       - name: Upload Newman Report
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: newman-report
-#           path: newman-report/newman-report.html
-#           if-no-files-found: warn
-
-#   publish:
-#     needs: newman
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-
-#       - name: Set up GitHub Pages
-#         uses: peaceiris/actions-gh-pages@v3
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           publish_dir: ./newman-report/
-#           publish_branch: gh-pages
