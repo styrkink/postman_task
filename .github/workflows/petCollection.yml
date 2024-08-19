@@ -31,7 +31,7 @@ jobs:
 
     - name: Run POSTMAN collection
       run: |
-        newman run petstore.collection.json --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html --suppress-exit-code
+        newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" || exit 0 --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html --suppress-exit-code
 
     - name: Check if report was generated
       run: |
