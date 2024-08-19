@@ -17,19 +17,32 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '14'
 
       - name: Install Newman
         run: npm install -g newman
 
+      - name: Create report directory
+        run: mkdir -p newman-report
+
       - name: Run Newman Collection
-        run: newman run petstore.collection.json --reporters html,cli --reporter-html-export newman-report.html --suppress-exit-code
+        run: newman run postman/your-collection-file.json --reporters html,cli --reporter-html-export newman-report/newman-report.html
+
+      - name: Check if report exists
+        run: |
+          if [ -f newman-report/newman-report.html ]; then
+            echo "Report exists"
+          else
+            echo "Report does not exist"
+            exit 1
+          fi
 
       - name: Upload Newman Report
         uses: actions/upload-artifact@v3
         with:
           name: newman-report
-          path: newman-report.html
+          path: newman-report/newman-report.html
+          if-no-files-found: warn
 
   publish:
     needs: newman
