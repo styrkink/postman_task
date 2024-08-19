@@ -1,31 +1,46 @@
-name: Run Postman Collection with Newman
+name: Run Newman Collection and Publish Report
 
-on: 
+on:
   push:
-  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  newman-run:
+  newman:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '14'
 
       - name: Install Newman
         run: npm install -g newman
 
       - name: Run Newman Collection
-        run: newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" || exit 0
+        run: newman run petstore.collection.json --reporters html,cli --reporter-html-export newman-report.html
 
-      - name: Check for Test Failures
-        if: failure()
-        run: |
-          echo "Newman run completed with errors."
-          exit 1
+      - name: Upload Newman Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: newman-report
+          path: newman-report.html
+
+  publish:
+    needs: newman
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./newman-report/
+          publish_branch: gh-pages
