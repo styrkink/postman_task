@@ -31,15 +31,19 @@ jobs:
 
     - name: Run POSTMAN collection
       run: |
-        newman run petstore.collection.json --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html --suppress-exit-code
-
-    - name: Check if report was generated
+        newman run petstore.collection.json --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html
+      continue-on-error: true
+    
+    - name: Verify Report Generation
       run: |
-        if [ ! -f testResults/htmlreport.html ]; then
+        echo "Checking if report was generated..."
+        if [ -f testResults/htmlreport.html ]; then
+          echo "Report generated successfully!";
+        else
           echo "Report not generated, exiting...";
           exit 1;
         fi
-
+    
     - name: Checkout gh-pages branch
       if: success()
       run: git checkout -B gh-pages
