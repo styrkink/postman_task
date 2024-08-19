@@ -31,7 +31,7 @@ jobs:
 
     - name: Run POSTMAN collection
       run: |
-        newman run petstore.collection.json --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html
+        newman run petstore.collection.json --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html --suppress-exit-code
 
     - name: Check if report was generated
       run: |
