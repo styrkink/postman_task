@@ -34,6 +34,9 @@ jobs:
         newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" \
         --reporter-htmlextra --reporter-htmlextra-export ./testResults/htmlreport.html --suppress-exit-code
 
+    - name: List Test Results Directory
+      run: ls -l ./testResults
+
     - name: Checkout gh-pages branch
       if: success()
       run: git checkout -B gh-pages
