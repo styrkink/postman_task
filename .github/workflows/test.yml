@@ -26,7 +26,7 @@ jobs:
         run: mkdir -p testResults
  
       - name: Run POSTMAN collection
-        run: npm run test:api
+        run: newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/index.html --reporter-htmlextra-darkTheme > testResults/runreport1.html
         continue-on-error: true
       - name: Output the run Details
         uses: actions/upload-artifact@v4
