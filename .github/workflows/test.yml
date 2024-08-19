@@ -22,38 +22,52 @@ jobs:
       - name: Install Newman
         run: npm install -g newman
 
-      - name: Create report directory
-        run: mkdir -p newman-report
-
-      - name: Run Newman Collection
-        run: newman run store.collection.json --reporters html,cli --reporter-html-export newman-report/newman-report.html --suppress-exit-code
-
-      - name: Check if report exists
-        run: |
-          if [ -f newman-report/newman-report.html ]; then
-            echo "Report exists"
-          else
-            echo "Report does not exist"
-            exit 1
-          fi
-
-      - name: Upload Newman Report
-        uses: actions/upload-artifact@v3
+      - name: Make Directory for results
+        run: mkdir -p testResults
+ 
+      - name: Run POSTMAN collection
+        run: npm run test:api
+        continue-on-error: true
+      - name: Output the run Details
+        uses: actions/upload-artifact@v4
         with:
-          name: newman-report
-          path: newman-report/newman-report.html
-          if-no-files-found: warn
-
-  publish:
-    needs: newman
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+          name: RunReports
+          path: testResults
+ 
+      - name: Deploy to Github Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./newman-report/
           publish_branch: gh-pages
+          publish_dir: testResults
+
+#       - name: Check if report exists
+#         run: |
+#           if [ -f newman-report/newman-report.html ]; then
+#             echo "Report exists"
+#           else
+#             echo "Report does not exist"
+#             exit 1
+#           fi
+
+#       - name: Upload Newman Report
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: newman-report
+#           path: newman-report/newman-report.html
+#           if-no-files-found: warn
+
+#   publish:
+#     needs: newman
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Set up GitHub Pages
+#         uses: peaceiris/actions-gh-pages@v3
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           publish_dir: ./newman-report/
+#           publish_branch: gh-pages
