@@ -1,68 +1,45 @@
 name: Test-Build
-
 on:
   push:
     branches:
       - main
-
 jobs:
-  build:
+  test-api:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v2
-      with:
-        node-version: "16"
 
-    - name: Install dependencies
-      run: npm i
+      # INstall Node on the runner
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.x"
 
-    - name: Install newman
-      run: |
-        npm install -g newman
-        npm install -g newman-reporter-htmlextra
 
-    - name: Make Directory for results
-      run: mkdir -p testResults
+      # Install the newman command line utility and also install the html extra reporter
+      - name: Install newman
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
 
-    - name: Verify Collection File
-      run: ls -l petstore.collection.json
 
-    - name: Run POSTMAN collection
-      run: |
-        newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" \
-        --reporter-htmlextra --reporter-htmlextra-export testResults/htmlreport.html --suppress-exit-code
-      continue-on-error: true
+      # Make directory to upload the test results
+      - name: Make Directory for results
+        run: mkdir -p testResults
 
-    - name: Output Newman Logs
-      run: cat ./newman/cli.log
 
-    - name: List Test Results Directory
-      run: ls -l testResults
+      # Run the POSTMAN collection
+      - name: Run POSTMAN collection
+        continue-on-error: true
+        run: |
+          newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport1.html
 
-    - name: Checkout gh-pages branch
-      if: success()
-      run: git checkout -B gh-pages
 
-    - name: Copy Test Results to gh-pages branch
-      if: success()
-      run: cp -r testResults/* .
-
-    - name: Commit and push Test Results to gh-pages branch
-      if: success()
-      env:
-        GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
-      run: |
-        git config --global user.email "styrkink@gmail.com"
-        git config --global user.name "styrkink"
-        git add .
-        git commit -m "Update Test Results"
-        git push -f origin gh-pages
-
-    - name: Setup GitHub Pages
-      if: success()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GH_PAGES_TOKEN }}
-        publish_dir: testResults
+      # Upload the contents of Test Results directory to workspace
+      - name: Output the run Details
+        uses: actions/upload-artifact@v4
+        with:
+          name: RunReports
+          path: testResults 
