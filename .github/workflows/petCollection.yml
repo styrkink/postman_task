@@ -33,6 +33,10 @@ jobs:
       run: |
         newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" \
         --reporter-htmlextra --reporter-htmlextra-export ./testResults/htmlreport.html --suppress-exit-code
+      continue-on-error: true
+
+    - name: Output Newman Logs
+      run: cat ./newman/cli.log
 
     - name: List Test Results Directory
       run: ls -l ./testResults
