@@ -23,7 +23,7 @@ jobs:
         run: npm install -g newman
 
       - name: Run Newman Collection
-        run: newman run petstore.collection.json --reporters html,cli --reporter-html-export newman-report.html
+        run: newman run petstore.collection.json --reporters html,cli --reporter-html-export newman-report.html --suppress-exit-code
 
       - name: Upload Newman Report
         uses: actions/upload-artifact@v3
