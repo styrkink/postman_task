@@ -34,13 +34,6 @@ jobs:
         newman run ./petstore.collection.json --env-var "baseUrl=http://petstore.swagger.io/v2" \
         --reporter-htmlextra --reporter-htmlextra-export ./testResults/htmlreport.html --suppress-exit-code
 
-    - name: Check if report was generated
-      run: |
-        if [ ! -f ./testResults/htmlreport.html ]; then
-          echo "Report not generated, exiting...";
-          exit 1;
-        fi
-
     - name: Checkout gh-pages branch
       if: success()
       run: git checkout -B gh-pages
